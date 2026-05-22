@@ -1,0 +1,45 @@
+{% extends "base/_base.html" %}
+
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-page)">
+  <div style="width:100%;max-width:380px;padding:0 1rem">
+
+    <div style="text-align:center;margin-bottom:2rem">
+      <h1 style="font-size:1.5rem;font-weight:500;margin-bottom:.25rem">Sign in</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">Enter your credentials to continue</p>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div style="background:var(--bg-danger);color:var(--text-danger);border:0.5px solid var(--border-danger);border-radius:8px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.875rem">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" style="background:var(--bg-card);border:0.5px solid var(--border);border-radius:12px;padding:1.5rem">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+      <div style="margin-bottom:1rem">
+        <label style="display:block;font-size:.875rem;font-weight:500;margin-bottom:.5rem">Username</label>
+        <input type="text" name="username" autofocus required
+               style="width:100%" placeholder="your username">
+      </div>
+
+      <div style="margin-bottom:1.5rem">
+        <label style="display:block;font-size:.875rem;font-weight:500;margin-bottom:.5rem">Password</label>
+        <input type="password" name="password" required
+               style="width:100%" placeholder="••••••••">
+      </div>
+
+      <button type="submit" style="width:100%;padding:.625rem;font-size:.9375rem">
+        Sign in
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

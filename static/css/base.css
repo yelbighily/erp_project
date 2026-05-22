@@ -1,0 +1,9 @@
+:root {
+  --bg-page:   #f9fafb;
+  --bg-card:   #ffffff;
+  --border:    rgba(0,0,0,0.10);
+  --border-danger: #F7C1C1;
+  --text-muted:#6b7280;
+  --bg-danger: #FCEBEB;
+  --text-danger:#A32D2D;
+}

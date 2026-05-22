@@ -48,6 +48,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # ERP custom — must come after AuthenticationMiddleware
+    "apps.erp_core.middleware.CurrentCompanyMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"

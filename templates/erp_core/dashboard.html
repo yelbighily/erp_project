@@ -1,0 +1,30 @@
+{% extends "base/_base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div style="padding:2rem">
+  <h1 style="font-size:1.5rem;font-weight:500;margin-bottom:.5rem">
+    Dashboard
+  </h1>
+  <p style="color:var(--text-muted)">
+    Active company: <strong>{{ company.name }}</strong>
+    &nbsp;·&nbsp;
+    Industry: {{ company.get_industry_type_display }}
+    &nbsp;·&nbsp;
+    Currency: {{ company.base_currency }}
+  </p>
+
+  <div style="margin-top:2rem;padding:1.5rem;background:#fff;
+              border:0.5px solid rgba(0,0,0,0.10);border-radius:12px">
+    <p style="color:var(--text-muted);font-size:.9rem">
+      Enabled modules:
+      {% if enabled_modules %}
+        {{ enabled_modules|join:", " }}
+      {% else %}
+        None yet — add them via admin → Company Modules.
+      {% endif %}
+    </p>
+  </div>
+</div>
+{% endblock %}
