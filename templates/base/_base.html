@@ -3,46 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}ERP{% endblock %} — {{ request.current_company.name|default:"ERP" }}</title>
+  <title>{% block title %}ERP{% endblock %}{% if request.current_company %} · {{ request.current_company.name }}{% endif %}</title>
 
-  {% load static %}
+  {% load static erp_tags %}
 
-  <!-- Tailwind CSS (CDN for now — replace with build later) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- HTMX -->
-  <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
-
-  <!-- Alpine.js -->
-  <script src="https://unpkg.com/alpinejs@3.14.1" defer></script>
-
-  <!-- Tabler icons -->
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 
-  <!-- Your custom CSS -->
-  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
+  <script src="https://unpkg.com/alpinejs@3.14.1" defer></script>
 
   {% block extra_head %}{% endblock %}
 </head>
 <body>
-  {% if messages %}
-    <div id="toast-container"
-         style="position:fixed;top:1rem;right:1rem;z-index:1000;display:flex;flex-direction:column;gap:.5rem">
-      {% for message in messages %}
-        <div style="padding:.75rem 1rem;border-radius:8px;font-size:.875rem;min-width:260px;
-                    {% if message.tags == 'error' %}background:#FCEBEB;border:0.5px solid #F7C1C1;color:#A32D2D
-                    {% elif message.tags == 'success' %}background:#E1F5EE;border:0.5px solid #9FE1CB;color:#085041
-                    {% else %}background:#E6F1FB;border:0.5px solid #B5D4F4;color:#0C447C{% endif %}">
-          {{ message }}
-        </div>
-      {% endfor %}
-    </div>
-    <script>setTimeout(()=>{var t=document.getElementById('toast-container');if(t)t.remove();},4000)</script>
-  {% endif %}
 
+{% if request.user.is_authenticated and request.current_company %}
+
+<div class="erp-shell">
+
+  {% include "base/_topbar.html" %}
+
+  <div class="erp-body">
+    {% include "base/_sidebar.html" %}
+
+    <main class="erp-content">
+      {% include "base/_messages.html" %}
+    </main>
+  </div>
+
+</div>
+
+{% else %}
   {% block content %}{% endblock %}
+{% endif %}
 
-  {% block extra_js %}{% endblock %}
+{% block extra_js %}{% endblock %}
 </body>
 </html>

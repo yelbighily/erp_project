@@ -1,0 +1,74 @@
+{% load erp_tags %}
+<header class="erp-topbar">
+
+  <span class="tb-logo">
+    <i class="ti ti-layout-grid" style="font-size:18px;vertical-align:-3px" aria-hidden="true"></i>
+    ERP
+  </span>
+
+  <div class="tb-sep"></div>
+
+  <div style="position:relative">
+    <button class="company-btn"
+            onclick="document.getElementById('co-dropdown').classList.toggle('hidden')"
+            aria-haspopup="true" aria-label="Switch company">
+      <i class="ti ti-building" style="font-size:13px" aria-hidden="true"></i>
+      {{ request.current_company.name }}
+      <i class="ti ti-chevron-down" style="font-size:11px" aria-hidden="true"></i>
+    </button>
+
+    <div id="co-dropdown" class="company-dropdown hidden" role="menu">
+      {% for role in request.user.company_roles.all %}
+        {% if role.is_active %}
+          <a href="{% url 'erp_core:switch_company' role.company.id %}"
+             class="company-option {% if role.company == request.current_company %}active{% endif %}"
+             role="menuitem">
+            <span>
+              <span style="display:block;font-weight:500">{{ role.company.name }}</span>
+              <span style="font-size:11px;color:var(--text-muted)">{{ role.get_role_display }}</span>
+            </span>
+            {% if role.company == request.current_company %}
+              <i class="ti ti-check" style="font-size:14px" aria-hidden="true"></i>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+      <div style="height:0.5px;background:var(--border);margin:6px 0"></div>
+      <a href="{% url 'erp_core:company_create' %}" class="company-option" role="menuitem">
+        <i class="ti ti-plus" style="font-size:14px;margin-right:4px" aria-hidden="true"></i>
+        New company
+      </a>
+    </div>
+  </div>
+
+  <div class="tb-spacer"></div>
+
+  <button class="tb-icon" aria-label="Search" title="Search (Ctrl+K)">
+    <i class="ti ti-search" aria-hidden="true"></i>
+  </button>
+
+  <button class="tb-icon" style="position:relative" aria-label="Notifications">
+    <i class="ti ti-bell" aria-hidden="true"></i>
+    <span class="notif-dot"></span>
+  </button>
+
+  <div class="tb-sep"></div>
+
+  <div class="tb-avatar" title="{{ request.user.get_full_name|default:request.user.username }}">
+    {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+  </div>
+
+  <a href="{% url 'erp_core:logout' %}" class="tb-icon" title="Sign out" aria-label="Sign out">
+    <i class="ti ti-logout" aria-hidden="true"></i>
+  </a>
+
+</header>
+
+<script>
+document.addEventListener('click', function(e) {
+  var dd = document.getElementById('co-dropdown');
+  if (dd && !dd.classList.contains('hidden') && !e.target.closest('.company-btn') && !e.target.closest('#co-dropdown')) {
+    dd.classList.add('hidden');
+  }
+});
+</script>

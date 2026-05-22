@@ -1,30 +1,74 @@
 {% extends "base/_base.html" %}
+{% load erp_tags %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div style="padding:2rem">
-  <h1 style="font-size:1.5rem;font-weight:500;margin-bottom:.5rem">
-    Dashboard
-  </h1>
-  <p style="color:var(--text-muted)">
-    Active company: <strong>{{ company.name }}</strong>
-    &nbsp;·&nbsp;
-    Industry: {{ company.get_industry_type_display }}
-    &nbsp;·&nbsp;
-    Currency: {{ company.base_currency }}
-  </p>
 
-  <div style="margin-top:2rem;padding:1.5rem;background:#fff;
-              border:0.5px solid rgba(0,0,0,0.10);border-radius:12px">
-    <p style="color:var(--text-muted);font-size:.9rem">
-      Enabled modules:
-      {% if enabled_modules %}
-        {{ enabled_modules|join:", " }}
-      {% else %}
-        None yet — add them via admin → Company Modules.
-      {% endif %}
-    </p>
+<div class="breadcrumb">
+  <span>Home</span>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>Dashboard</span>
+</div>
+
+<div class="page-header">
+  <h1 class="page-title">Dashboard</h1>
+  <p class="page-subtitle">
+    {{ company.name }}
+    &nbsp;·&nbsp; {{ company.get_industry_type_display }}
+    &nbsp;·&nbsp; {{ company.base_currency }}
+  </p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-label">Active modules</div>
+    <div class="stat-value">{{ enabled_modules|length }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Company</div>
+    <div class="stat-value" style="font-size:15px;padding-top:4px">{{ company.name }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Industry</div>
+    <div class="stat-value" style="font-size:15px;padding-top:4px">
+      {{ company.get_industry_type_display }}
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Base currency</div>
+    <div class="stat-value">{{ company.base_currency }}</div>
   </div>
 </div>
+
+<div class="card">
+  <div class="card-title">Enabled modules</div>
+  {% if enabled_modules %}
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      {% for mod in enabled_modules %}
+        <span class="badge badge-info">{{ mod }}</span>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="font-size:13px;color:var(--text-muted)">
+      No modules enabled yet.
+      <a href="/admin/erp_core/companymodule/add/" style="color:var(--primary)">
+        Add modules via admin
+      </a>
+    </p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="card-title">Quick start</div>
+  <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">
+    Enable modules via admin to activate their menu sections.
+  </p>
+  <a href="/admin/erp_core/companymodule/add/"
+     class="btn btn-primary" style="display:inline-flex">
+    <i class="ti ti-plus" aria-hidden="true"></i>
+    Enable a module
+  </a>
+</div>
+
 {% endblock %}

@@ -68,6 +68,11 @@ def switch_company(request, company_id):
 
 
 @login_required
+def company_create(request):
+    # Placeholder — full wizard comes in Phase 1
+    return render(request, "erp_core/company_create.html")
+
+@login_required
 def dashboard(request):
     company = request.current_company
     enabled_modules = CompanyModule.objects.filter(
