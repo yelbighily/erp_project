@@ -5,6 +5,8 @@ from django.contrib import messages
 from .models import Company, UserCompanyRole, CompanyModule
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from .module_utils import enabled_modules as get_enabled_modules
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -77,13 +79,11 @@ def company_create(request):
 @login_required
 def dashboard(request):
     company = request.current_company
-    enabled_modules = CompanyModule.objects.filter(
-        company=company, is_enabled=True
-    ).values_list("module", flat=True)
+    mods = get_enabled_modules(company)
 
     return render(request, "erp_core/dashboard.html", {
         "company": company,
-        "enabled_modules": list(enabled_modules),
+        "enabled_modules": mods,
     })
 
 @login_required

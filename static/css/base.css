@@ -4,7 +4,7 @@
   --sidebar-collapsed-width: 52px;
 
   --bg-page:    #f3f4f6;
-  --bg-card:    #ffffff;
+  --bg-card:    #84c0bb;
   --bg-surface: #f9fafb;
   --border:     rgba(0,0,0,0.09);
   --border-md:  rgba(0,0,0,0.14);
@@ -48,18 +48,18 @@
 
 /* Theme overrides — add class to <body> */
 body.theme-green {
-  --accent: #3a695d; --accent-light: #e1f5ee; --accent-dark: #085041;
-  --sb-bg: #4b8d71; --sb-text: #a8d9c4; --sb-muted: #5fa888;
+  --accent: #3a695d; --accent-light: #f5f8f7; --accent-dark: #085041;
+  --sb-bg: #4b8d71; --sb-text: #ffffff; --sb-muted: #ffffff;
   --sb-active-bg: #3a695d; --sb-hover: #1e3d2e; --sb-label: #ffffff;
 }
 body.theme-purple {
   --accent: #814271; --accent-light: #eeedfe; --accent-dark: #714A67;
-  --sb-bg: #814271; --sb-text: #ffffff; --sb-muted: #ffffff;
-  --sb-active-bg: #58314f; --sb-hover: #714A67; --sb-label: #f8f8f8;
+  --sb-bg: #814b74; --sb-text: #ffffff; --sb-muted: #ffffff;
+  --sb-active-bg: #3d2b39; --sb-hover: #714A67; --sb-label: #f8f8f8;
 }
 body.theme-slate {
   --accent: #374151; --accent-light: #f3f4f6; --accent-dark: #1f2937;
-  --sb-bg: #1f2937; --sb-text: #d1d5db; --sb-muted: #9ca3af;
+  --sb-bg: #1f2937; --sb-text: #ffffff; --sb-muted: #9ca3af;
   --sb-active-bg: #374151; --sb-hover: #283141; --sb-label: #ffffff;
 }
 

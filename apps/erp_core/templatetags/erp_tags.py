@@ -1,29 +1,26 @@
 from django import template
 from django.urls import reverse, NoReverseMatch
+from apps.erp_core.module_utils import module_enabled as _module_enabled
 
 register = template.Library()
 
 
+@register.simple_tag
+def module_enabled(company, module_name):
+    """
+    Returns True/False for use in {% if %} blocks.
+    Usage: {% module_enabled company 'crm' as crm_on %}
+    """
+    return _module_enabled(company, module_name)
+
+
 @register.simple_tag(takes_context=True)
 def active_class(context, request, url_name):
-    """Returns 'active' if the current URL matches the given url_name."""
+    """Returns 'active' CSS class if current path matches url_name."""
     try:
         return "active" if request.path == reverse(url_name) else ""
     except NoReverseMatch:
         return ""
-
-
-@register.simple_tag
-def module_enabled(company, module_name):
-    """Returns True if the module is enabled for the company."""
-    if not company:
-        return False
-    return company.modules.filter(module=module_name, is_enabled=True).exists()
-
-
-@register.inclusion_tag("base/_sidebar.html", takes_context=True)
-def sidebar(context):
-    return context
 
 
 class ModuleEnabledNode(template.Node):
@@ -39,9 +36,7 @@ class ModuleEnabledNode(template.Node):
         except template.VariableDoesNotExist:
             return self.nodelist_false.render(context)
 
-        if company and company.modules.filter(
-            module=self.module_name, is_enabled=True
-        ).exists():
+        if _module_enabled(company, self.module_name):
             return self.nodelist_true.render(context)
         return self.nodelist_false.render(context)
 
@@ -49,16 +44,21 @@ class ModuleEnabledNode(template.Node):
 @register.tag("if_module_enabled")
 def do_if_module_enabled(parser, token):
     """
-    {% if_module_enabled request.current_company 'crm' %}
-      ... show CRM menu items ...
-    {% endif %}
+    Block tag — renders content only if module is enabled.
+
+    Usage:
+        {% if_module_enabled request.current_company 'crm' %}
+          <a href="...">Leads</a>
+        {% endif %}
     """
     bits = token.split_contents()
     if len(bits) != 3:
         raise template.TemplateSyntaxError(
-            f"{bits[0]} requires exactly 2 arguments: company and module_name"
+            f"{bits[0]} requires exactly 2 arguments"
         )
     _, company_expr, module_name = bits
     nodelist_true = parser.parse(("endif",))
     parser.delete_first_token()
-    return ModuleEnabledNode(company_expr, module_name, nodelist_true, template.NodeList())
+    return ModuleEnabledNode(
+        company_expr, module_name, nodelist_true, template.NodeList()
+    )

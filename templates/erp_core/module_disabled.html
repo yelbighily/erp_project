@@ -1,0 +1,33 @@
+# The friendly error page shown when someone hits a disabled module
+
+{% extends "base/_base.html" %}
+{% block title %}Module not enabled{% endblock %}
+
+{% block content %}
+<div style="max-width:480px;margin:60px auto;text-align:center;padding:0 1rem">
+
+  <div style="font-size:48px;margin-bottom:16px;color:var(--text-hint)">
+    <i class="ti ti-puzzle-off" aria-hidden="true"></i>
+  </div>
+
+  <h1 class="page-title" style="margin-bottom:8px">Module not enabled</h1>
+
+  <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px">
+    The <strong>{{ module_name }}</strong> module is not active
+    for <strong>{{ company.name }}</strong>.
+    Ask your administrator to enable it.
+  </p>
+
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <a href="{% url 'erp_core:dashboard' %}" class="btn btn-primary">
+      <i class="ti ti-home" aria-hidden="true"></i>
+      Back to dashboard
+    </a>
+    <a href="/admin/erp_core/companymodule/add/" class="btn">
+      <i class="ti ti-settings" aria-hidden="true"></i>
+      Enable in admin
+    </a>
+  </div>
+
+</div>
+{% endblock %}
