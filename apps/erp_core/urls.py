@@ -10,4 +10,5 @@ urlpatterns = [
     path("company/switch/<int:company_id>/", views.switch_company, name="switch_company"),
     path("company/create/",      views.company_create,  name="company_create"),
     path("dashboard/",           views.dashboard,       name="dashboard"),
+    path("set-theme/",           views.set_theme, name="set_theme"),
 ]

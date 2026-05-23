@@ -1,91 +1,159 @@
 {% load erp_tags %}
-<nav class="erp-sidebar" aria-label="Main navigation">
+<nav class="erp-sidebar" id="erp-sidebar" aria-label="Main navigation">
 
   <div class="sb-section">
     <a href="{% url 'erp_core:dashboard' %}"
-       class="sb-item {% active_class request 'erp_core:dashboard' %}">
-      <i class="ti ti-home" aria-hidden="true"></i>Dashboard
+       class="sb-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i class="ti ti-home" aria-hidden="true"></i>
+      <span class="sb-item-text">Dashboard</span>
+      <span class="sb-tooltip">Dashboard</span>
     </a>
   </div>
 
   {% if_module_enabled request.current_company 'crm' %}
   <div class="sb-divider"></div>
   <div class="sb-section">
-    <div class="sb-label">CRM</div>
-    <a href="#" class="sb-item"><i class="ti ti-user-plus" aria-hidden="true"></i>Leads</a>
-    <a href="#" class="sb-item"><i class="ti ti-building" aria-hidden="true"></i>Accounts</a>
-    <a href="#" class="sb-item"><i class="ti ti-target" aria-hidden="true"></i>Opportunities</a>
-    <a href="#" class="sb-item"><i class="ti ti-calendar" aria-hidden="true"></i>Activities</a>
+    <div class="sb-section-header open" onclick="toggleSection(this,'sb-crm')">
+      <span class="sb-label">CRM</span>
+      <i class="ti ti-chevron-down sb-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="sb-section-body" id="sb-crm" style="max-height:300px">
+      <a href="#" class="sb-item"><i class="ti ti-user-plus" aria-hidden="true"></i><span class="sb-item-text">Leads</span><span class="sb-tooltip">Leads</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-building" aria-hidden="true"></i><span class="sb-item-text">Accounts</span><span class="sb-tooltip">Accounts</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-target" aria-hidden="true"></i><span class="sb-item-text">Opportunities</span><span class="sb-tooltip">Opportunities</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-calendar" aria-hidden="true"></i><span class="sb-item-text">Activities</span><span class="sb-tooltip">Activities</span></a>
+    </div>
   </div>
   {% endif %}
 
   {% if_module_enabled request.current_company 'sales' %}
   <div class="sb-divider"></div>
   <div class="sb-section">
-    <div class="sb-label">Sales</div>
-    <a href="#" class="sb-item"><i class="ti ti-file-text" aria-hidden="true"></i>Quotations</a>
-    <a href="#" class="sb-item"><i class="ti ti-shopping-cart" aria-hidden="true"></i>Orders</a>
-    <a href="#" class="sb-item"><i class="ti ti-truck" aria-hidden="true"></i>Deliveries</a>
-    <a href="#" class="sb-item"><i class="ti ti-receipt" aria-hidden="true"></i>Invoices</a>
-    <a href="#" class="sb-item"><i class="ti ti-cash" aria-hidden="true"></i>Payments</a>
+    <div class="sb-section-header open" onclick="toggleSection(this,'sb-sales')">
+      <span class="sb-label">Sales</span>
+      <i class="ti ti-chevron-down sb-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="sb-section-body" id="sb-sales" style="max-height:300px">
+      <a href="#" class="sb-item"><i class="ti ti-file-text" aria-hidden="true"></i><span class="sb-item-text">Quotations</span><span class="sb-tooltip">Quotations</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-shopping-cart" aria-hidden="true"></i><span class="sb-item-text">Orders</span><span class="sb-tooltip">Orders</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-truck" aria-hidden="true"></i><span class="sb-item-text">Deliveries</span><span class="sb-tooltip">Deliveries</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-receipt" aria-hidden="true"></i><span class="sb-item-text">Invoices</span><span class="sb-tooltip">Invoices</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-cash" aria-hidden="true"></i><span class="sb-item-text">Payments</span><span class="sb-tooltip">Payments</span></a>
+    </div>
   </div>
   {% endif %}
 
   {% if_module_enabled request.current_company 'purchase' %}
   <div class="sb-divider"></div>
   <div class="sb-section">
-    <div class="sb-label">Purchase</div>
-    <a href="#" class="sb-item"><i class="ti ti-clipboard-list" aria-hidden="true"></i>Requisitions</a>
-    <a href="#" class="sb-item"><i class="ti ti-send" aria-hidden="true"></i>RFQs</a>
-    <a href="#" class="sb-item"><i class="ti ti-file-invoice" aria-hidden="true"></i>Purchase Orders</a>
-    <a href="#" class="sb-item"><i class="ti ti-package" aria-hidden="true"></i>Goods Receipts</a>
-    <a href="#" class="sb-item"><i class="ti ti-receipt-2" aria-hidden="true"></i>Vendor Bills</a>
+    <div class="sb-section-header open" onclick="toggleSection(this,'sb-purchase')">
+      <span class="sb-label">Purchase</span>
+      <i class="ti ti-chevron-down sb-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="sb-section-body" id="sb-purchase" style="max-height:300px">
+      <a href="#" class="sb-item"><i class="ti ti-clipboard-list" aria-hidden="true"></i><span class="sb-item-text">Requisitions</span><span class="sb-tooltip">Requisitions</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-send" aria-hidden="true"></i><span class="sb-item-text">RFQs</span><span class="sb-tooltip">RFQs</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-file-invoice" aria-hidden="true"></i><span class="sb-item-text">Purchase Orders</span><span class="sb-tooltip">Purchase Orders</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-package" aria-hidden="true"></i><span class="sb-item-text">Goods Receipts</span><span class="sb-tooltip">Goods Receipts</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-receipt-2" aria-hidden="true"></i><span class="sb-item-text">Vendor Bills</span><span class="sb-tooltip">Vendor Bills</span></a>
+    </div>
   </div>
   {% endif %}
 
   {% if_module_enabled request.current_company 'inventory' %}
   <div class="sb-divider"></div>
   <div class="sb-section">
-    <div class="sb-label">Inventory</div>
-    <a href="#" class="sb-item"><i class="ti ti-box" aria-hidden="true"></i>Items</a>
-    <a href="#" class="sb-item"><i class="ti ti-building-warehouse" aria-hidden="true"></i>Warehouses</a>
-    <a href="#" class="sb-item"><i class="ti ti-arrows-exchange" aria-hidden="true"></i>Transactions</a>
+    <div class="sb-section-header open" onclick="toggleSection(this,'sb-inventory')">
+      <span class="sb-label">Inventory</span>
+      <i class="ti ti-chevron-down sb-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="sb-section-body" id="sb-inventory" style="max-height:300px">
+      <a href="#" class="sb-item"><i class="ti ti-box" aria-hidden="true"></i><span class="sb-item-text">Items</span><span class="sb-tooltip">Items</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-building-warehouse" aria-hidden="true"></i><span class="sb-item-text">Warehouses</span><span class="sb-tooltip">Warehouses</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-arrows-exchange" aria-hidden="true"></i><span class="sb-item-text">Transactions</span><span class="sb-tooltip">Transactions</span></a>
+    </div>
   </div>
   {% endif %}
 
   {% if_module_enabled request.current_company 'manufacturing' %}
   <div class="sb-divider"></div>
   <div class="sb-section">
-    <div class="sb-label">Manufacturing</div>
-    <a href="#" class="sb-item"><i class="ti ti-hierarchy" aria-hidden="true"></i>BOMs</a>
-    <a href="#" class="sb-item"><i class="ti ti-tool" aria-hidden="true"></i>Work Centers</a>
-    <a href="#" class="sb-item"><i class="ti ti-industry" aria-hidden="true"></i>Production Orders</a>
+    <div class="sb-section-header open" onclick="toggleSection(this,'sb-mfg')">
+      <span class="sb-label">Manufacturing</span>
+      <i class="ti ti-chevron-down sb-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="sb-section-body" id="sb-mfg" style="max-height:300px">
+      <a href="#" class="sb-item"><i class="ti ti-hierarchy" aria-hidden="true"></i><span class="sb-item-text">BOMs</span><span class="sb-tooltip">BOMs</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-tool" aria-hidden="true"></i><span class="sb-item-text">Work Centers</span><span class="sb-tooltip">Work Centers</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-industry" aria-hidden="true"></i><span class="sb-item-text">Production Orders</span><span class="sb-tooltip">Production Orders</span></a>
+    </div>
   </div>
   {% endif %}
 
   {% if_module_enabled request.current_company 'hr' %}
   <div class="sb-divider"></div>
   <div class="sb-section">
-    <div class="sb-label">HR</div>
-    <a href="#" class="sb-item"><i class="ti ti-users" aria-hidden="true"></i>Employees</a>
-    <a href="#" class="sb-item"><i class="ti ti-sitemap" aria-hidden="true"></i>Departments</a>
-    <a href="#" class="sb-item"><i class="ti ti-beach" aria-hidden="true"></i>Leave</a>
+    <div class="sb-section-header open" onclick="toggleSection(this,'sb-hr')">
+      <span class="sb-label">HR</span>
+      <i class="ti ti-chevron-down sb-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="sb-section-body" id="sb-hr" style="max-height:300px">
+      <a href="#" class="sb-item"><i class="ti ti-users" aria-hidden="true"></i><span class="sb-item-text">Employees</span><span class="sb-tooltip">Employees</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-sitemap" aria-hidden="true"></i><span class="sb-item-text">Departments</span><span class="sb-tooltip">Departments</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-beach" aria-hidden="true"></i><span class="sb-item-text">Leave</span><span class="sb-tooltip">Leave</span></a>
+    </div>
   </div>
   {% endif %}
 
   {% if_module_enabled request.current_company 'accounting' %}
   <div class="sb-divider"></div>
   <div class="sb-section">
-    <div class="sb-label">Accounting</div>
-    <a href="#" class="sb-item"><i class="ti ti-list-tree" aria-hidden="true"></i>Chart of Accounts</a>
-    <a href="#" class="sb-item"><i class="ti ti-book" aria-hidden="true"></i>Journal Entries</a>
-    <a href="#" class="sb-item"><i class="ti ti-chart-bar" aria-hidden="true"></i>Reports</a>
+    <div class="sb-section-header open" onclick="toggleSection(this,'sb-accounting')">
+      <span class="sb-label">Accounting</span>
+      <i class="ti ti-chevron-down sb-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="sb-section-body" id="sb-accounting" style="max-height:300px">
+      <a href="#" class="sb-item"><i class="ti ti-list-tree" aria-hidden="true"></i><span class="sb-item-text">Chart of Accounts</span><span class="sb-tooltip">Chart of Accounts</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-book" aria-hidden="true"></i><span class="sb-item-text">Journal Entries</span><span class="sb-tooltip">Journal Entries</span></a>
+      <a href="#" class="sb-item"><i class="ti ti-chart-bar" aria-hidden="true"></i><span class="sb-item-text">Reports</span><span class="sb-tooltip">Reports</span></a>
+    </div>
   </div>
   {% endif %}
 
+  <div style="flex:1;min-height:16px"></div>
   <div class="sb-divider"></div>
-  <div class="sb-section" style="margin-top:auto">
-    <a href="#" class="sb-item"><i class="ti ti-settings" aria-hidden="true"></i>Settings</a>
+  <div class="sb-section">
+    <a href="#" class="sb-item">
+      <i class="ti ti-settings" aria-hidden="true"></i>
+      <span class="sb-item-text">Settings</span>
+      <span class="sb-tooltip">Settings</span>
+    </a>
   </div>
 
+  <button class="sb-toggle"
+          onclick="toggleSidebar()"
+          aria-label="Toggle sidebar">
+    <i class="ti ti-layout-sidebar-left-collapse" id="sb-toggle-icon" aria-hidden="true"></i>
+  </button>
+
 </nav>
+
+<script>
+function toggleSidebar() {
+  var sb  = document.getElementById('erp-sidebar');
+  var ic  = document.getElementById('sb-toggle-icon');
+  var col = sb.classList.toggle('sb-collapsed');
+  ic.className = col
+    ? 'ti ti-layout-sidebar-left-expand'
+    : 'ti ti-layout-sidebar-left-collapse';
+  localStorage.setItem('sb_collapsed', col ? '1' : '0');
+}
+
+function toggleSection(header, bodyId) {
+  var body = document.getElementById(bodyId);
+  if (!body) return;
+  var closing = !body.classList.contains('sb-closed');
+  body.classList.toggle('sb-closed', closing);
+  header.classList.toggle('sb-closed', closing);
+}
+</script>

@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Company, UserCompanyRole, CompanyModule
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -83,3 +85,12 @@ def dashboard(request):
         "company": company,
         "enabled_modules": list(enabled_modules),
     })
+
+@login_required
+@require_POST
+def set_theme(request):
+    allowed = ['', 'theme-green', 'theme-purple', 'theme-slate']
+    theme = request.POST.get('theme', '')
+    if theme in allowed:
+        request.session['erp_theme'] = theme
+    return JsonResponse({'ok': True})

@@ -16,27 +16,46 @@
 
   {% block extra_head %}{% endblock %}
 </head>
-<body>
+
+<body class="{{ request.session.erp_theme|default:'' }}">
 
 {% if request.user.is_authenticated and request.current_company %}
 
-<div class="erp-shell">
-
-  {% include "base/_topbar.html" %}
-
-  <div class="erp-body">
-    {% include "base/_sidebar.html" %}
-
-    <main class="erp-content">
-      {% include "base/_messages.html" %}
-    </main>
+  <div class="erp-shell">
+    {% include "base/_topbar.html" %}
+    <div class="erp-body">
+      {% include "base/_sidebar.html" %}
+      <main class="erp-content" id="main-content">
+        {% include "base/_messages.html" %}
+      </main>
+    </div>
   </div>
-
-</div>
 
 {% else %}
   {% block content %}{% endblock %}
 {% endif %}
+
+<script>
+/* Restore sidebar state from localStorage */
+(function(){
+  var sb = document.getElementById('erp-sidebar');
+  if(sb && localStorage.getItem('sb_collapsed') === '1'){
+    sb.classList.add('sb-collapsed');
+    var ic = document.getElementById('sb-toggle-icon');
+    if(ic) ic.className = 'ti ti-layout-sidebar-left-expand';
+  }
+})();
+
+/* Close company dropdown when clicking outside */
+document.addEventListener('click', function(e){
+  var dd = document.getElementById('co-dropdown');
+  if(dd && !dd.classList.contains('hidden')
+     && !e.target.closest('.company-btn')
+     && !e.target.closest('#co-dropdown')){
+    dd.classList.add('hidden');
+  }
+});
+</script>
 
 {% block extra_js %}{% endblock %}
 </body>
