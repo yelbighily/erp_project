@@ -1,0 +1,82 @@
+{% extends "base/_base.html" %}
+{% block title %}{{ action }} account{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'erp_core:dashboard' %}">Home</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <a href="{% url 'crm:account_list' %}">Accounts</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>{{ action }}</span>
+</div>
+
+<div class="page-header">
+  <h1 class="page-title">{{ action }} account</h1>
+</div>
+
+<div class="card" style="max-width:720px">
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">
+          Account name <span style="color:var(--danger-text)">*</span>
+        </label>
+        {{ form.name }}
+        {% if form.name.errors %}
+          <div class="form-error">{{ form.name.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        {{ form.type }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Industry</label>
+        {{ form.industry }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        {{ form.phone }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        {{ form.email }}
+      </div>
+
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Website</label>
+        {{ form.website }}
+      </div>
+
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Address</label>
+        {{ form.address }}
+      </div>
+
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Assigned to</label>
+        {{ form.assigned_to }}
+      </div>
+
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Notes</label>
+        {{ form.notes }}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:6px;margin-top:8px">
+      <button type="submit" class="btn btn-primary">
+        <i class="ti ti-check" aria-hidden="true"></i>
+        Save account
+      </button>
+      <a href="{% url 'crm:account_list' %}" class="btn">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

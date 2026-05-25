@@ -1,0 +1,76 @@
+{% extends "base/_base.html" %}
+{% block title %}{{ action }} lead{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'erp_core:dashboard' %}">Home</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <a href="{% url 'crm:lead_list' %}">Leads</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>{{ action }}</span>
+</div>
+
+<div class="page-header">
+  <h1 class="page-title">{{ action }} lead</h1>
+</div>
+
+<div class="card" style="max-width:720px">
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="form-group">
+        <label class="form-label">First name <span style="color:var(--danger-text)">*</span></label>
+        {{ form.first_name }}
+        {% if form.first_name.errors %}
+          <div class="form-error">{{ form.first_name.errors.0 }}</div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last name</label>
+        {{ form.last_name }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        {{ form.email }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        {{ form.phone }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Company name</label>
+        {{ form.company_name }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Source</label>
+        {{ form.source }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        {{ form.status }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Score</label>
+        {{ form.score }}
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Assigned to</label>
+        {{ form.assigned_to }}
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Notes</label>
+        {{ form.notes }}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button type="submit" class="btn btn-primary">
+        <i class="ti ti-check" aria-hidden="true"></i>
+        Save lead
+      </button>
+      <a href="{% url 'crm:lead_list' %}" class="btn">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

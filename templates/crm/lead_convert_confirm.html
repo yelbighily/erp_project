@@ -1,0 +1,30 @@
+{% extends "base/_base.html" %}
+{% block title %}Convert lead{% endblock %}
+
+{% block content %}
+<div style="max-width:480px;margin:0 auto">
+  <div class="page-header">
+    <h1 class="page-title">Convert lead</h1>
+    <p class="page-subtitle">{{ lead.full_name }}</p>
+  </div>
+
+  <div class="card">
+    <p style="font-size:14px;margin-bottom:16px">
+      This will create an <strong>Account</strong> and <strong>Contact</strong>
+      from this lead and mark it as converted. This cannot be undone.
+    </p>
+    <div style="background:var(--bg-surface);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:20px;font-size:13px">
+      <div><span style="color:var(--text-muted)">Name:</span> {{ lead.full_name }}</div>
+      <div><span style="color:var(--text-muted)">Company:</span> {{ lead.company_name|default:"—" }}</div>
+      <div><span style="color:var(--text-muted)">Email:</span> {{ lead.email|default:"—" }}</div>
+    </div>
+    <form method="post" style="display:flex;gap:10px">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">
+        <i class="ti ti-check" aria-hidden="true"></i> Confirm convert
+      </button>
+      <a href="{% url 'crm:lead_detail' lead.pk %}" class="btn">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

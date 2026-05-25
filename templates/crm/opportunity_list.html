@@ -1,0 +1,134 @@
+{% extends "base/_base.html" %}
+{% block title %}Opportunities{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'erp_core:dashboard' %}">Home</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>Opportunities</span>
+</div>
+
+<div class="page-header"
+     style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <h1 class="page-title">Opportunities</h1>
+    <p class="page-subtitle">Sales pipeline for {{ request.current_company.name }}</p>
+  </div>
+  <a href="{% url 'crm:opportunity_create' %}" class="btn btn-primary">
+    <i class="ti ti-plus" aria-hidden="true"></i> New opportunity
+  </a>
+</div>
+
+<!-- Pipeline summary cards -->
+{% if pipeline %}
+  <div class="stat-grid" style="margin-bottom:20px">
+    {% for row in pipeline %}
+      <div class="stat-card c-blue">
+        <div class="stat-label">{{ row.stage }}</div>
+        <div class="stat-value">{{ row.count }}</div>
+        <div class="stat-delta">
+          {% if row.total %}
+            {{ request.current_company.base_currency }}
+            {{ row.total|floatformat:0 }}
+          {% else %}
+            No value set
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- Opportunities table -->
+<div class="card" style="padding:0;overflow:hidden">
+  {% if opportunities %}
+    <table class="erp-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Account</th>
+          <th>Stage</th>
+          <th>Amount</th>
+          <th>Probability</th>
+          <th>Close date</th>
+          <th>Assigned to</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for opp in opportunities %}
+          <tr>
+            <td>
+              <a href="{% url 'crm:opportunity_detail' opp.pk %}"
+                 style="font-weight:500;color:var(--accent);text-decoration:none">
+                {{ opp.name }}
+              </a>
+            </td>
+            <td>
+              {% if opp.account %}
+                <a href="{% url 'crm:account_detail' opp.account.pk %}"
+                   style="color:var(--text-muted);text-decoration:none">
+                  {{ opp.account.name }}
+                </a>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td>
+              {% if opp.stage == "WON" %}
+                <span class="badge badge-success">{{ opp.get_stage_display }}</span>
+              {% elif opp.stage == "LOST" %}
+                <span class="badge badge-gray">{{ opp.get_stage_display }}</span>
+              {% elif opp.stage == "NEGOTIATION" %}
+                <span class="badge badge-warning">{{ opp.get_stage_display }}</span>
+              {% else %}
+                <span class="badge badge-info">{{ opp.get_stage_display }}</span>
+              {% endif %}
+            </td>
+            <td style="font-family:var(--font-mono);font-size:13px">
+              {% if opp.amount %}
+                {{ opp.currency }} {{ opp.amount|floatformat:2 }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="flex:1;height:4px;background:var(--border-md);border-radius:2px;min-width:60px">
+                  <div style="width:{{ opp.probability }}%;height:4px;background:var(--accent);border-radius:2px"></div>
+                </div>
+                <span style="font-size:12px;color:var(--text-muted);white-space:nowrap">
+                  {{ opp.probability }}%
+                </span>
+              </div>
+            </td>
+            <td style="font-size:12px;color:var(--text-muted)">
+              {{ opp.close_date|date:"d M Y"|default:"—" }}
+            </td>
+            <td style="font-size:12px">
+              {{ opp.assigned_to.get_full_name|default:"—" }}
+            </td>
+            <td>
+              <a href="{% url 'crm:opportunity_edit' opp.pk %}"
+                 class="btn" style="padding:4px 10px;font-size:12px">
+                <i class="ti ti-edit" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state">
+      <i class="ti ti-target" aria-hidden="true"></i>
+      <h3>No opportunities yet</h3>
+      <p>Track your deals from prospect to won.</p>
+      <a href="{% url 'crm:opportunity_create' %}"
+         class="btn btn-primary" style="margin-top:12px;display:inline-flex">
+        <i class="ti ti-plus" aria-hidden="true"></i> New opportunity
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

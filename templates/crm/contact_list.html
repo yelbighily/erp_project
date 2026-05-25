@@ -1,0 +1,87 @@
+{% extends "base/_base.html" %}
+{% block title %}Contacts{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'erp_core:dashboard' %}">Home</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>Contacts</span>
+</div>
+
+<div class="page-header"
+     style="display:flex;align-items:flex-start;
+            justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <h1 class="page-title">Contacts</h1>
+    <p class="page-subtitle">
+      People linked to your accounts
+    </p>
+  </div>
+  <a href="{% url 'crm:contact_create' %}" class="btn btn-primary">
+    <i class="ti ti-plus" aria-hidden="true"></i> New contact
+  </a>
+</div>
+
+<div class="card" style="padding:0;overflow:hidden">
+  {% if contacts %}
+    <table class="erp-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Account</th>
+          <th>Job title</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Assigned to</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contact in contacts %}
+          <tr>
+            <td>
+              <a href="{% url 'crm:contact_detail' contact.pk %}"
+                 style="font-weight:500;color:var(--accent);text-decoration:none">
+                {{ contact.full_name }}
+              </a>
+            </td>
+            <td>
+              {% if contact.account %}
+                <a href="{% url 'crm:account_detail' contact.account.pk %}"
+                   style="color:var(--text-muted);text-decoration:none">
+                  {{ contact.account.name }}
+                </a>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td>{{ contact.job_title|default:"—" }}</td>
+            <td>{{ contact.email|default:"—" }}</td>
+            <td>{{ contact.phone|default:"—" }}</td>
+            <td style="font-size:12px">
+              {{ contact.assigned_to.get_full_name|default:"—" }}
+            </td>
+            <td>
+              <a href="{% url 'crm:contact_edit' contact.pk %}"
+                 class="btn" style="padding:4px 10px;font-size:12px">
+                <i class="ti ti-edit" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state">
+      <i class="ti ti-user" aria-hidden="true"></i>
+      <h3>No contacts yet</h3>
+      <p>Contacts are created when you convert a lead, or manually.</p>
+      <a href="{% url 'crm:contact_create' %}"
+         class="btn btn-primary"
+         style="margin-top:12px;display:inline-flex">
+        <i class="ti ti-plus" aria-hidden="true"></i> New contact
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

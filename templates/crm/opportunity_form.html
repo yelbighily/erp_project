@@ -1,0 +1,92 @@
+{% extends "base/_base.html" %}
+{% block title %}{{ action }} opportunity{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'erp_core:dashboard' %}">Home</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <a href="{% url 'crm:opportunity_list' %}">Opportunities</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>{{ action }}</span>
+</div>
+
+<div class="page-header">
+  <h1 class="page-title">{{ action }} opportunity</h1>
+</div>
+
+<div class="card" style="max-width:720px">
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">
+          Opportunity name <span style="color:var(--danger-text)">*</span>
+        </label>
+        {{ form.name }}
+        {% if form.name.errors %}
+          <div class="form-error">{{ form.name.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Account</label>
+        {{ form.account }}
+        <div class="form-hint">Link to an existing account</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contact</label>
+        {{ form.contact }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Stage</label>
+        {{ form.stage }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Probability (%)</label>
+        {{ form.probability }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        {{ form.amount }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Currency</label>
+        {{ form.currency }}
+        <div class="form-hint">Defaults to company base currency</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Expected close date</label>
+        {{ form.close_date }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Assigned to</label>
+        {{ form.assigned_to }}
+      </div>
+
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Description</label>
+        {{ form.description }}
+      </div>
+
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button type="submit" class="btn btn-primary">
+        <i class="ti ti-check" aria-hidden="true"></i>
+        Save opportunity
+      </button>
+      <a href="{% url 'crm:opportunity_list' %}" class="btn">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

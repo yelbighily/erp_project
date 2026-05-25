@@ -1,0 +1,99 @@
+{% extends "base/_base.html" %}
+{% load erp_tags %}
+
+{% block title %}Leads{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'erp_core:dashboard' %}">Home</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>Leads</span>
+</div>
+
+<div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <h1 class="page-title">Leads</h1>
+    <p class="page-subtitle">All incoming leads for {{ request.current_company.name }}</p>
+  </div>
+  <a href="{% url 'crm:lead_create' %}" class="btn btn-primary">
+    <i class="ti ti-plus" aria-hidden="true"></i> New lead
+  </a>
+</div>
+
+<div class="card" style="padding:0;overflow:hidden">
+  <div style="padding:14px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-size:13px;color:var(--text-muted)">Filter by status:</span>
+    <a href="{% url 'crm:lead_list' %}"
+       class="badge {% if not status_filter %}badge-info{% else %}badge-gray{% endif %}">
+      All
+    </a>
+    {% for val, label in status_choices %}
+      <a href="?status={{ val }}"
+         class="badge {% if status_filter == val %}badge-info{% else %}badge-gray{% endif %}">
+        {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  {% if leads %}
+    <table class="erp-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Company</th>
+          <th>Source</th>
+          <th>Status</th>
+          <th>Score</th>
+          <th>Assigned to</th>
+          <th>Created</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lead in leads %}
+          <tr>
+            <td>
+              <a href="{% url 'crm:lead_detail' lead.pk %}"
+                 style="font-weight:500;color:var(--accent);text-decoration:none">
+                {{ lead.full_name }}
+              </a>
+            </td>
+            <td>{{ lead.company_name|default:"—" }}</td>
+            <td>{{ lead.get_source_display }}</td>
+            <td>
+              {% if lead.status == "NEW" %}
+                <span class="badge badge-info">{{ lead.get_status_display }}</span>
+              {% elif lead.status == "CONVERTED" %}
+                <span class="badge badge-success">{{ lead.get_status_display }}</span>
+              {% elif lead.status == "UNQUALIFIED" %}
+                <span class="badge badge-gray">{{ lead.get_status_display }}</span>
+              {% else %}
+                <span class="badge badge-warning">{{ lead.get_status_display }}</span>
+              {% endif %}
+            </td>
+            <td>{{ lead.score }}</td>
+            <td>{{ lead.assigned_to.get_full_name|default:"—" }}</td>
+            <td style="font-size:12px;color:var(--text-muted)">
+              {{ lead.created_at|date:"d M Y" }}
+            </td>
+            <td>
+              <a href="{% url 'crm:lead_edit' lead.pk %}" class="btn" style="padding:4px 10px;font-size:12px">
+                <i class="ti ti-edit" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state">
+      <i class="ti ti-user-plus" aria-hidden="true"></i>
+      <h3>No leads yet</h3>
+      <p>Start by adding your first lead.</p>
+      <a href="{% url 'crm:lead_create' %}" class="btn btn-primary" style="margin-top:12px;display:inline-flex">
+        <i class="ti ti-plus" aria-hidden="true"></i> New lead
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends "base/_base.html" %}
+{% block title %}{{ contact.full_name }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'erp_core:dashboard' %}">Home</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <a href="{% url 'crm:contact_list' %}">Contacts</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>{{ contact.full_name }}</span>
+</div>
+
+<div class="page-header"
+     style="display:flex;align-items:flex-start;
+            justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <h1 class="page-title">{{ contact.full_name }}</h1>
+    <p class="page-subtitle">
+      {% if contact.job_title %}{{ contact.job_title }}{% endif %}
+      {% if contact.account %}
+        {% if contact.job_title %}&nbsp;·&nbsp;{% endif %}
+        <a href="{% url 'crm:account_detail' contact.account.pk %}"
+           style="color:var(--accent);text-decoration:none">
+          {{ contact.account.name }}
+        </a>
+      {% endif %}
+    </p>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <a href="{% url 'crm:contact_edit' contact.pk %}" class="btn">
+      <i class="ti ti-edit" aria-hidden="true"></i> Edit
+    </a>
+    <a href="{% url 'crm:activity_create' %}?contact={{ contact.pk }}"
+       class="btn">
+      <i class="ti ti-calendar-plus" aria-hidden="true"></i> Log activity
+    </a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+
+  <div class="card">
+    <div class="card-title">Contact info</div>
+    <table style="width:100%;font-size:13px">
+      <tr>
+        <td style="color:var(--text-muted);padding:5px 0;width:40%">Email</td>
+        <td>{{ contact.email|default:"—" }}</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-muted);padding:5px 0">Phone</td>
+        <td>{{ contact.phone|default:"—" }}</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-muted);padding:5px 0">Job title</td>
+        <td>{{ contact.job_title|default:"—" }}</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-muted);padding:5px 0">Account</td>
+        <td>
+          {% if contact.account %}
+            <a href="{% url 'crm:account_detail' contact.account.pk %}"
+               style="color:var(--accent);text-decoration:none">
+              {{ contact.account.name }}
+            </a>
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-muted);padding:5px 0">Assigned to</td>
+        <td>{{ contact.assigned_to.get_full_name|default:"—" }}</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-muted);padding:5px 0">Created</td>
+        <td style="font-size:12px">{{ contact.created_at|date:"d M Y" }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Notes</div>
+    <p style="font-size:13px;color:var(--text-muted);white-space:pre-line">
+      {{ contact.notes|default:"No notes." }}
+    </p>
+  </div>
+
+</div>
+
+<!-- Opportunities -->
+<div class="card" style="margin-bottom:16px">
+  <div class="card-header">
+    <div class="card-title">Opportunities ({{ opportunities|length }})</div>
+    <a href="{% url 'crm:opportunity_create' %}?contact={{ contact.pk }}"
+       class="card-action">+ New</a>
+  </div>
+  {% if opportunities %}
+    <table class="erp-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Account</th>
+          <th>Stage</th>
+          <th>Amount</th>
+          <th>Close date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for opp in opportunities %}
+          <tr>
+            <td>
+              <a href="{% url 'crm:opportunity_detail' opp.pk %}"
+                 style="font-weight:500;color:var(--accent);text-decoration:none">
+                {{ opp.name }}
+              </a>
+            </td>
+            <td>{{ opp.account.name|default:"—" }}</td>
+            <td>
+              {% if opp.stage == "WON" %}
+                <span class="badge badge-success">{{ opp.get_stage_display }}</span>
+              {% elif opp.stage == "LOST" %}
+                <span class="badge badge-gray">{{ opp.get_stage_display }}</span>
+              {% elif opp.stage == "NEGOTIATION" %}
+                <span class="badge badge-warning">{{ opp.get_stage_display }}</span>
+              {% else %}
+                <span class="badge badge-info">{{ opp.get_stage_display }}</span>
+              {% endif %}
+            </td>
+            <td style="font-family:var(--font-mono);font-size:13px">
+              {% if opp.amount %}
+                {{ opp.currency }} {{ opp.amount|floatformat:2 }}
+              {% else %}—{% endif %}
+            </td>
+            <td style="font-size:12px">
+              {{ opp.close_date|date:"d M Y"|default:"—" }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="font-size:13px;color:var(--text-muted)">
+      No opportunities linked to this contact.
+    </p>
+  {% endif %}
+</div>
+
+<!-- Activities -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">Activities ({{ activities|length }})</div>
+    <a href="{% url 'crm:activity_create' %}?contact={{ contact.pk }}"
+       class="card-action">+ Log activity</a>
+  </div>
+  {% if activities %}
+    <table class="erp-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Subject</th>
+          <th>Status</th>
+          <th>Due</th>
+          <th>Assigned to</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for act in activities %}
+          <tr>
+            <td>
+              <span class="badge badge-gray">{{ act.get_type_display }}</span>
+            </td>
+            <td>{{ act.subject }}</td>
+            <td>
+              {% if act.status == "DONE" %}
+                <span class="badge badge-success">{{ act.get_status_display }}</span>
+              {% elif act.status == "CANCELLED" %}
+                <span class="badge badge-gray">{{ act.get_status_display }}</span>
+              {% else %}
+                <span class="badge badge-info">{{ act.get_status_display }}</span>
+              {% endif %}
+            </td>
+            <td style="font-size:12px;color:var(--text-muted)">
+              {{ act.due_date|date:"d M Y H:i"|default:"—" }}
+            </td>
+            <td style="font-size:12px">
+              {{ act.assigned_to.get_full_name|default:"—" }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="font-size:13px;color:var(--text-muted)">No activities yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

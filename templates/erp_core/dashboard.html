@@ -21,21 +21,21 @@
 </div>
 
 <div class="stat-grid">
-  <div class="stat-card">
+  <div class="stat-card c-blue">
     <div class="stat-label">Active modules</div>
     <div class="stat-value">{{ enabled_modules|length }}</div>
   </div>
-  <div class="stat-card">
+  <div class="stat-card c-green">
     <div class="stat-label">Company</div>
     <div class="stat-value" style="font-size:15px;padding-top:4px">{{ company.name }}</div>
   </div>
-  <div class="stat-card">
+  <div class="stat-card c-amber">
     <div class="stat-label">Industry</div>
     <div class="stat-value" style="font-size:15px;padding-top:4px">
       {{ company.get_industry_type_display }}
     </div>
   </div>
-  <div class="stat-card">
+  <div class="stat-card c-red">
     <div class="stat-label">Base currency</div>
     <div class="stat-value">{{ company.base_currency }}</div>
   </div>

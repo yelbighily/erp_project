@@ -18,10 +18,36 @@
       <i class="ti ti-chevron-down sb-chevron" aria-hidden="true"></i>
     </div>
     <div class="sb-section-body" id="sb-crm" style="max-height:300px">
-      <a href="#" class="sb-item"><i class="ti ti-user-plus" aria-hidden="true"></i><span class="sb-item-text">Leads</span><span class="sb-tooltip">Leads</span></a>
-      <a href="#" class="sb-item"><i class="ti ti-building" aria-hidden="true"></i><span class="sb-item-text">Accounts</span><span class="sb-tooltip">Accounts</span></a>
-      <a href="#" class="sb-item"><i class="ti ti-target" aria-hidden="true"></i><span class="sb-item-text">Opportunities</span><span class="sb-tooltip">Opportunities</span></a>
-      <a href="#" class="sb-item"><i class="ti ti-calendar" aria-hidden="true"></i><span class="sb-item-text">Activities</span><span class="sb-tooltip">Activities</span></a>
+      <a href="{% url 'crm:lead_list' %}" class="sb-item
+           {% if 'leads' in request.path %}active{% endif %}">
+          <i class="ti ti-user-plus" aria-hidden="true"></i>
+          <span class="sb-item-text">Leads</span>
+          <span class="sb-tooltip">Leads</span>
+      </a>
+      <a href="{% url 'crm:account_list' %}" class="sb-item
+           {% if 'accounts' in request.path %}active{% endif %}">
+          <i class="ti ti-building" aria-hidden="true"></i>
+          <span class="sb-item-text">Accounts</span>
+          <span class="sb-tooltip">Accounts</span>
+      </a>
+      <a href="{% url 'crm:contact_list' %}" class="sb-item 
+           {% if 'contacts' in request.path %}active{% endif %}">
+          <i class="ti ti-user" aria-hidden="true"></i>
+          <span class="sb-item-text">Contacts</span>
+          <span class="sb-tooltip">Contacts</span>
+      </a>
+      <a href="{% url 'crm:opportunity_list' %}" class="sb-item
+           {% if 'opportunities' in request.path %}active{% endif %}">
+          <i class="ti ti-target" aria-hidden="true"></i>
+          <span class="sb-item-text">Opportunities</span>
+          <span class="sb-tooltip">Opportunities</span>
+      </a>  
+      <a href="{% url 'crm:activity_list' %}"
+         class="sb-item {% if 'activities' in request.path %}active{% endif %}">
+        <i class="ti ti-calendar" aria-hidden="true"></i>
+        <span class="sb-item-text">Activities</span>
+        <span class="sb-tooltip">Activities</span>
+      </a>
     </div>
   </div>
   {% endif %}

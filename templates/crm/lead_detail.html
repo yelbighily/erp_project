@@ -1,0 +1,88 @@
+{% extends "base/_base.html" %}
+{% block title %}{{ lead.full_name }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'erp_core:dashboard' %}">Home</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <a href="{% url 'crm:lead_list' %}">Leads</a>
+  <i class="ti ti-chevron-right" aria-hidden="true"></i>
+  <span>{{ lead.full_name }}</span>
+</div>
+
+<div class="page-header" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <h1 class="page-title">{{ lead.full_name }}</h1>
+    <p class="page-subtitle">
+      {{ lead.get_source_display }}
+      &nbsp;·&nbsp;
+      {% if lead.status == "NEW" %}
+        <span class="badge badge-info">{{ lead.get_status_display }}</span>
+      {% elif lead.status == "CONVERTED" %}
+        <span class="badge badge-success">{{ lead.get_status_display }}</span>
+      {% else %}
+        <span class="badge badge-warning">{{ lead.get_status_display }}</span>
+      {% endif %}
+    </p>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <a href="{% url 'crm:lead_edit' lead.pk %}" class="btn">
+      <i class="ti ti-edit" aria-hidden="true"></i> Edit
+    </a>
+    <a href="{% url 'crm:activity_create' %}?lead={{ lead.pk }}" class="btn">
+      <i class="ti ti-calendar-plus" aria-hidden="true"></i> Log activity
+    </a>
+    {% if lead.status != "CONVERTED" %}
+      <a href="{% url 'crm:lead_convert' lead.pk %}" class="btn btn-primary">
+        <i class="ti ti-arrow-right" aria-hidden="true"></i> Convert
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div class="card">
+    <div class="card-title">Contact info</div>
+    <table style="width:100%;font-size:13px">
+      <tr><td style="color:var(--text-muted);padding:5px 0;width:40%">Email</td><td>{{ lead.email|default:"—" }}</td></tr>
+      <tr><td style="color:var(--text-muted);padding:5px 0">Phone</td><td>{{ lead.phone|default:"—" }}</td></tr>
+      <tr><td style="color:var(--text-muted);padding:5px 0">Company</td><td>{{ lead.company_name|default:"—" }}</td></tr>
+      <tr><td style="color:var(--text-muted);padding:5px 0">Assigned to</td><td>{{ lead.assigned_to.get_full_name|default:"—" }}</td></tr>
+      <tr><td style="color:var(--text-muted);padding:5px 0">Score</td><td>{{ lead.score }}/100</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Notes</div>
+    <p style="font-size:13px;color:var(--text-muted)">
+      {{ lead.notes|default:"No notes." }}
+    </p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">Activities</div>
+  </div>
+  {% if activities %}
+    <table class="erp-table">
+      <thead>
+        <tr><th>Type</th><th>Subject</th><th>Status</th><th>Due</th><th>Assigned</th></tr>
+      </thead>
+      <tbody>
+        {% for act in activities %}
+          <tr>
+            <td><span class="badge badge-gray">{{ act.get_type_display }}</span></td>
+            <td>{{ act.subject }}</td>
+            <td>{{ act.get_status_display }}</td>
+            <td style="font-size:12px">{{ act.due_date|date:"d M Y H:i"|default:"—" }}</td>
+            <td style="font-size:12px">{{ act.assigned_to.get_full_name|default:"—" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="font-size:13px;color:var(--text-muted)">No activities yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

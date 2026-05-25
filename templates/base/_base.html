@@ -1,3 +1,4 @@
+{# authenticated pages  (shell + sidebar) #}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:'en' }}">
 <head>
@@ -27,12 +28,10 @@
       {% include "base/_sidebar.html" %}
       <main class="erp-content" id="main-content">
         {% include "base/_messages.html" %}
+        {% block content %}{% endblock %}
       </main>
     </div>
   </div>
-
-{% else %}
-  {% block content %}{% endblock %}
 {% endif %}
 
 <script>
